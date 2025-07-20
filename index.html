@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Thi Trắc Nghiệm</title>
+    <link rel="icon" href="https://www.freeiconspng.com/uploads/school-icon-png-5.png" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RSV525YKKT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RSV525YKKT');
+    </script>
+    <style>
+        /* Custom styles for the exam schedule table, can be moved to style.css if preferred */
+        /* body {
+            font-family: 'Inter', sans-serif; /* Already set in style.css, but good for context */
+            /* background-color: #f3f4f6; /* bg-gray-100 */
+        /* } */
+        .table-caption {
+            color: #1d4ed8; /* text-blue-700 */
+            padding-left: 1rem; /* px-4 for caption */
+            padding-right: 1rem; /* px-4 for caption */
+        }
+        .table-header-exam { /* Renamed to avoid conflict if 'table-header' is generic */
+            background-color: #4a90e2; /* bg-blue-600 */
+            color: white;
+        }
+        .exam-row-passed td {
+            color: #9ca3af; /* text-gray-400 */
+        }
+        .exam-row-next-day {
+            background-color: #fef08a; /* bg-yellow-200 */
+        }
+        .exam-row-next-day td {
+            color: #713f12; /* text-yellow-900 */
+            font-weight: 600; /* font-semibold */
+        }
+        .exam-row-upcoming td {
+            color: #1f2937; /* text-gray-800 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav id="navigation-bar" class="navigation-bar">
+        <div class="nav-container">
+            <div class="nav-item active" data-section="study">
+                <span>Học tập</span>
+            </div>
+            <div class="nav-item" data-section="utilities">
+                <span>Tiện ích</span>
+            </div>
+            <div class="nav-item" data-section="info">
+                <span>Thông tin</span>
+            </div>
+        </div>
+    </nav>
+
+    <div id="app-container">
+
+        <div id="subject-selection-screen" class="screen active">
+            <div class="screen-container"> <h1>Chọn Môn Học</h1>
+
+                <p>Chọn môn học bạn muốn ôn tập trắc nghiệm:</p>
+                <div id="subject-list" class="grid-container">
+                    </div>
+
+
+                </div> </div>
+
+        <div id="quiz-list-screen" class="screen">
+             <div class="screen-container">
+                 <button id="back-to-subjects-btn" class="back-button"><i class="ph ph-arrow-left"></i> Quay lại</button>
+                 <h1 id="quiz-list-title">Danh sách bài thi môn: <span>...</span></h1>
+                 <div id="quiz-list" class="list-container">
+                     </div>
+             </div>
+         </div>
+
+         <div id="info-screen" class="screen">
+              <div class="screen-container info-container">
+                 <button id="back-to-quiz-list-btn" class="back-button"><i class="ph ph-arrow-left"></i> Quay lại</button>
+                 <h1 id="quiz-title">Tên Bài Thi</h1>
+                 <p>Thông tin chi tiết về bài thi:</p>
+                 <div class="info-details">
+                     <p><strong><i class="ph ph-list-checks"></i> Số lượng câu hỏi:</strong> <span id="info-total-questions">0</span></p>
+                     <p><strong><i class="ph ph-timer"></i> Thời gian làm bài:</strong> <span id="info-time-limit">0</span> phút</p>
+                 </div>
+                 <p>Nhấn nút bên dưới để bắt đầu làm bài.</p>
+                 <button id="start-btn" class="start-button">Bắt đầu làm bài</button>
+              </div>
+         </div>
+
+         <div id="quiz-section" class="screen">
+             <div id="quiz-toolbar">
+                 <button id="back-to-quiz-list-from-quiz-btn" class="back-button"><i class="ph ph-arrow-left"></i> Quay lại</button>
+                 <div id="timer-container">
+                     <i class="ph ph-timer"></i> Thời gian: <span id="time-left">00:00</span>
+                 </div>
+                 <button id="submit-btn-toolbar" class="submit-button">Nộp bài</button>
+             </div>
+
+             <div class="screen-container quiz-active-container">
+                  <div id="quiz">
+                      </div>
+                  <div class="button-container">
+                      <button id="submit-btn" class="submit-button">Nộp bài</button>
+                      <button id="retry-btn" style="display: none;">Làm lại</button>
+                      <button id="back-to-list-after-result-btn" style="display: none;" class="secondary-button">Về danh sách bài thi</button>
+                  </div>
+                  <div id="score-container" style="display: none;">
+                      </div>
+                  <div id="filter-container" style="display: none;">
+                      <button class="filter-btn active" data-filter="all">Tất cả</button>
+                      <button class="filter-btn" data-filter="correct">Chỉ câu đúng</button>
+                      <button class="filter-btn" data-filter="incorrect">Chỉ câu sai</button>
+                  </div>
+                  <div id="result-container" style="display: none;">
+                      </div>
+              </div>
+         </div>
+    </div>
+
+
+    <script type="module" src="script.js"></script>
+
+    <script>
+        // Script for donation progress bar has been removed as the bar was removed.
+    </script>
+
+</body>
+</html>
