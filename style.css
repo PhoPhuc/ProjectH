@@ -3600,3 +3600,45 @@ body.dark-mode .schedule-modal-header { background: #232323; }
     width: 2px;
   }
 }
+
+@media (max-width: 600px) {
+  .navbar {
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 4vw !important;
+    font-size: 1em !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--navbar-bg, #fff);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .navbar-item {
+    flex: 1 1 0;
+    text-align: center;
+    padding: 0 2vw;
+    font-size: 0.98em;
+    height: 48px;
+    line-height: 48px;
+    border-radius: 10px;
+    margin: 0 2px;
+    transition: background 0.18s, color 0.18s;
+    touch-action: manipulation;
+  }
+  .navbar-item:active {
+    background: #e6e6e6;
+    color: #1976d2;
+  }
+  .navbar-item:hover {
+    background: none;
+    color: inherit;
+  }
+  .navbar-logo {
+    display: none !important;
+  }
+}
