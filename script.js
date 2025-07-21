@@ -970,10 +970,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3>Lịch thi</h3>
                     <p>Xem lịch thi và đếm ngược thời gian</p>
                 </div>
-                <div class="utility-card">
-                    <i class="ph ph-calculator"></i>
-                    <h3>Máy tính</h3>
-                    <p>Máy tính khoa học cho các phép tính phức tạp</p>
+                <div class="utility-card" id="tictactoe-utility">
+                    <i class="ph ph-game-controller"></i>
+                    <h3>Tic Tac Toe</h3>
+                    <p>Chơi cờ caro giải trí, rèn luyện trí tuệ</p>
                 </div>
                 <div class="utility-card" id="clock-utility">
                     <i class="ph ph-brain"></i>
@@ -2496,4 +2496,267 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Sau khi render utilitiesSection
+    setTimeout(() => {
+      const tttCard = document.getElementById('tictactoe-utility');
+      if (tttCard) {
+        tttCard.addEventListener('click', () => {
+          document.body.insertAdjacentHTML('beforeend', `
+            <div class="ttt-modal-overlay" id="ttt-modal-overlay"></div>
+            <div class="ttt-modal" id="ttt-modal">
+              <div class="ttt-modal-header">
+                <span class="ttt-modal-title">Tic Tac Toe Không Hòa</span>
+                <button class="ttt-modal-close" id="ttt-modal-close">×</button>
+              </div>
+              <div class="ttt-modal-desc">Một biến thể cờ caro không hòa. Đặt 3 quân, sau đó di chuyển quân cũ nhất để thắng!</div>
+              <div class="ttt-board-container" id="ttt-board-container"></div>
+              <div class="ttt-controls">
+                <button id="ttt-restart-btn" class="ttt-restart-btn">Chơi lại</button>
+              </div>
+            </div>
+          `);
+          document.getElementById('ttt-modal-close').onclick = closeTTTModal;
+          document.getElementById('ttt-modal-overlay').onclick = closeTTTModal;
+          document.getElementById('ttt-restart-btn').onclick = () => { if(window.initTTTGame) window.initTTTGame(); };
+          if(window.initTTTGame) window.initTTTGame();
+        });
+      }
+    }, 100);
+
+    function closeTTTModal() {
+      const modal = document.getElementById('ttt-modal');
+      const overlay = document.getElementById('ttt-modal-overlay');
+      if(modal) modal.remove();
+      if(overlay) overlay.remove();
+    }
+
+    window.initTTTGame = function() {
+      const config = {
+        rows: 3, columns: 3, maxPieces: 3,
+        playerSymbols: ['X', 'O'],
+        playerNames: ['Người chơi X', 'Người chơi O']
+      };
+      let board = Array(config.rows * config.columns).fill(null);
+      let placed = [[], []];
+      let turn = 0;
+      let phase = 1;
+      let winner = null;
+      let selectedIdx = null;
+      let vsAI = window.tttVsAI || false;
+      const boardEl = document.getElementById('ttt-board-container');
+      if (!boardEl) return;
+
+      // Thêm nút chọn chế độ
+      const oldModeRow = document.querySelector('.ttt-mode-row');
+      if (oldModeRow) oldModeRow.remove();
+      if (!document.getElementById('ttt-mode-select')) {
+        const modeHtml = `<div class='ttt-mode-row'><button id='ttt-mode-2p' class='ttt-mode-btn'>2 Người</button><button id='ttt-mode-ai' class='ttt-mode-btn'>Chơi với máy</button></div>`;
+        boardEl.insertAdjacentHTML('beforebegin', modeHtml);
+        document.getElementById('ttt-mode-2p').onclick = () => { window.tttVsAI = false; window.initTTTGame(); };
+        document.getElementById('ttt-mode-ai').onclick = () => { window.tttVsAI = true; window.initTTTGame(); };
+        if (vsAI) document.getElementById('ttt-mode-ai').classList.add('active');
+        else document.getElementById('ttt-mode-2p').classList.add('active');
+      }
+
+      function render() {
+        let html = '<div class="ttt-board">';
+        for (let r = 0; r < config.rows; r++) {
+          html += '<div class="ttt-board-row">';
+          for (let c = 0; c < config.columns; c++) {
+            const idx = r * config.columns + c;
+            let cell = board[idx];
+            let classes = 'ttt-cell';
+            // Chỉ quân cũ nhất của đội có lượt (turn) mới glow
+            if (phase === 2 && placed[turn][0] === idx && winner === null) classes += ' ttt-cell-glow';
+            if (phase === 2 && selectedIdx === idx) classes += ' ttt-cell-selected';
+            if (cell === 'X') classes += ' x-cell';
+            if (cell === 'O') classes += ' o-cell';
+            html += `<div class="${classes}" data-idx="${idx}">${cell ? cell : ''}</div>`;
+          }
+          html += '</div>';
+        }
+        html += '</div>';
+        if (winner !== null) {
+          html += `<div class='ttt-win-banner'><span class='ttt-win-icon'>🎉</span> <b>${config.playerNames[winner]} thắng!</b></div>`;
+        }
+        boardEl.innerHTML = html;
+        document.querySelectorAll('.ttt-cell').forEach(cell => {
+          cell.onclick = () => handleCellClick(Number(cell.dataset.idx));
+        });
+      }
+
+      function getStatusText() {
+        if (winner !== null) return `<b>${config.playerNames[winner]} thắng!</b>`;
+        if (phase === 1) return `Giai đoạn 1: Đặt quân - Đến lượt <b>${config.playerNames[turn]}</b>`;
+        if (phase === 2) return `Giai đoạn 2: Di chuyển - <b>${config.playerNames[turn]}</b> di chuyển quân cũ nhất`;
+        return '';
+      }
+
+      function handleCellClick(idx) {
+        if (winner !== null) return;
+        if (phase === 1) {
+          if (board[idx] !== null) return;
+          board[idx] = config.playerSymbols[turn];
+          placed[turn].push(idx);
+          if (placed[turn].length > config.maxPieces) placed[turn].shift();
+          if (placed[0].length + placed[1].length === config.maxPieces * 2) phase = 2;
+          if (checkWin(config.playerSymbols[turn])) { winner = turn; render(); return; }
+          turn = 1 - turn;
+          render();
+          if (vsAI && turn === 1 && winner === null) setTimeout(aiMove, 400);
+        } else if (phase === 2) {
+          // Nếu chưa chọn quân cũ nhất để di chuyển
+          if (selectedIdx === null) {
+            // Chỉ cho phép chọn quân cũ nhất của đội có lượt
+            if (placed[turn][0] === idx) { movingTeam = turn; selectedIdx = idx; render(); return; }
+            return;
+          }
+          // Đã chọn quân cũ nhất, chỉ cho phép di chuyển quân đó sang ô trống liền kề
+          if (board[idx] !== null) return;
+          if (!isAdjacent(selectedIdx, idx)) return;
+          // Di chuyển quân cũ nhất của movingTeam
+          board[selectedIdx] = null;
+          board[idx] = config.playerSymbols[movingTeam];
+          placed[movingTeam].shift();
+          placed[movingTeam].push(idx);
+          if (checkWin(config.playerSymbols[movingTeam])) { winner = movingTeam; render(); return; }
+          selectedIdx = null;
+          movingTeam = null;
+          turn = 1 - turn;
+          render();
+          if (vsAI && turn === 1 && winner === null) setTimeout(aiMove, 400);
+        }
+      }
+
+      function aiMove() {
+        if (winner !== null) return;
+        if (phase === 1) {
+          // Ưu tiên thắng, nếu không thì random
+          let move = findWinningMove(1);
+          if (move === null) {
+            let empty = board.map((v,i) => v===null?i:null).filter(i=>i!==null);
+            move = empty[Math.floor(Math.random()*empty.length)];
+          }
+          board[move] = config.playerSymbols[1];
+          placed[1].push(move);
+          if (placed[1].length > config.maxPieces) placed[1].shift();
+          if (placed[0].length + placed[1].length === config.maxPieces * 2) phase = 2;
+          if (checkWin(config.playerSymbols[1])) { winner = 1; render(); return; }
+          turn = 0;
+          render();
+        } else if (phase === 2) {
+          // Di chuyển quân cũ nhất sang ô trống liền kề, ưu tiên thắng
+          let from = placed[1][0];
+          let moves = getAdjacentEmpty(from);
+          let move = null;
+          for (let m of moves) {
+            // Thử di chuyển, kiểm tra thắng
+            let testBoard = board.slice();
+            testBoard[from] = null;
+            testBoard[m] = config.playerSymbols[1];
+            if (checkWinOnBoard(testBoard, config.playerSymbols[1])) { move = m; break; }
+          }
+          if (move === null && moves.length > 0) move = moves[Math.floor(Math.random()*moves.length)];
+          if (move != null) {
+            board[from] = null;
+            board[move] = config.playerSymbols[1];
+            placed[1].shift();
+            placed[1].push(move);
+            if (checkWin(config.playerSymbols[1])) { winner = 1; render(); return; }
+            turn = 0;
+            selectedIdx = null;
+            render();
+          }
+        }
+      }
+
+      function findWinningMove(playerIdx) {
+        // Tìm nước đi thắng ở giai đoạn 1
+        let sym = config.playerSymbols[playerIdx];
+        let empty = board.map((v,i) => v===null?i:null).filter(i=>i!==null);
+        for (let idx of empty) {
+          let testBoard = board.slice();
+          testBoard[idx] = sym;
+          if (checkWinOnBoard(testBoard, sym)) return idx;
+        }
+        return null;
+      }
+
+      function getAdjacentEmpty(from) {
+        const fr = Math.floor(from / config.columns), fc = from % config.columns;
+        let res = [];
+        for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          let tr = fr + dr, tc = fc + dc;
+          if (tr >= 0 && tr < config.rows && tc >= 0 && tc < config.columns) {
+            let idx = tr * config.columns + tc;
+            if (board[idx] === null) res.push(idx);
+          }
+        }
+        return res;
+      }
+
+      function checkWin(sym) {
+        const lines = [
+          [0,1,2],[3,4,5],[6,7,8],
+          [0,3,6],[1,4,7],[2,5,8],
+          [0,4,8],[2,4,6]
+        ];
+        return lines.some(line => line.every(idx => board[idx] === sym));
+      }
+      function checkWinOnBoard(bd, sym) {
+        const lines = [
+          [0,1,2],[3,4,5],[6,7,8],
+          [0,3,6],[1,4,7],[2,5,8],
+          [0,4,8],[2,4,6]
+        ];
+        return lines.some(line => line.every(idx => bd[idx] === sym));
+      }
+      function isAdjacent(from, to) {
+        const fr = Math.floor(from / config.columns), fc = from % config.columns;
+        const tr = Math.floor(to / config.columns), tc = to % config.columns;
+        return Math.abs(fr - tr) <= 1 && Math.abs(fc - tc) <= 1 && (fr !== tr || fc !== tc);
+      }
+      function reset() {
+        board = Array(config.rows * config.columns).fill(null);
+        placed = [[], []];
+        turn = 0;
+        phase = 1;
+        winner = null;
+        selectedIdx = null;
+        render();
+        if (vsAI && turn === 1) setTimeout(aiMove, 400);
+      }
+      render();
+      document.getElementById('ttt-restart-btn').onclick = reset;
+    };
+
+    // Detect device type and optimize layout
+    function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    function optimizeLayoutForDevice() {
+        const body = document.body;
+        const navBar = document.querySelector('.navigation-bar');
+        if (isMobileDevice()) {
+            body.classList.add('is-mobile');
+            if (navBar) {
+                navBar.style.height = '72px'; // Higher nav bar
+                navBar.style.maxWidth = '340px'; // Narrower nav bar
+            }
+            // Optionally, show more news/cards if you have a news/tin section
+            // Example: document.querySelectorAll('.news-card').forEach(...)
+        } else {
+            body.classList.remove('is-mobile');
+            if (navBar) {
+                navBar.style.height = '';
+                navBar.style.maxWidth = '500px';
+            }
+            // Optionally, optimize for desktop (e.g., grid layout, more columns)
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', optimizeLayoutForDevice);
+    window.addEventListener('resize', optimizeLayoutForDevice);
 }); // Kết thúc DOMContentLoaded
