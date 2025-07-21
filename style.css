@@ -3,14 +3,14 @@
 
 /* --- Biến màu --- */
 :root {
-    --primary-color: #4a90e2; /* Blue */
+    --primary-color: #2563eb;
     --secondary-color: #50e3c2; /* Teal/Aqua */
-    --accent-color: #f5a623; /* Orange */
+    --accent-color: #fbbf24;
     --background-color: #f7f9fc; /* Light Blue-Gray */
-    --card-background: #ffffff; /* White */
-    --text-color: #4a4a4a; /* Dark Gray */
-    --text-light: #7f8c9b; /* Medium Gray */
-    --border-color: #dce4ec; /* Light Gray-Blue */
+    --card-background: rgba(255,255,255,0.12);
+    --text-color: #fff;
+    --text-light: #e0e6ed; /* Medium Gray */
+    --border-color: rgba(120,120,160,0.18);
     --correct-color: #2ecc71; /* Emerald Green */
     --incorrect-color: #e74c3c; /* Alizarin Red */
     --hover-light-bg: #e9f3ff;
@@ -24,7 +24,7 @@
     --filter-inactive-bg: #e9ecef;
     --filter-inactive-text: #495057;
     --filter-inactive-border: #ced4da;
-    --shadow-color: rgba(74, 144, 226, 0.15);
+    --shadow-color: rgba(31, 38, 135, 0.10);
     --shadow-light: rgba(0, 0, 0, 0.08);
     /* Màu cho countdown ngày thi */
     --countdown-digit-color: var(--primary-color);
@@ -44,18 +44,18 @@
 /* --- Dark Mode Variables --- */
 .dark-mode {
     --background-color: #1a1a1a; /* Dark background */
-    --card-background: #2d2d2d; /* Dark card background */
-    --text-color: #ffffff; /* White text */
+    --card-background: rgba(24,28,34,0.38);
+    --text-color: #e0e6ed;
     --text-light: #b0b0b0; /* Light gray text */
-    --border-color: #404040; /* Dark border */
+    --border-color: rgba(80,80,120,0.22);
     --hover-light-bg: #3a3a3a; /* Dark hover background */
-    --shadow-color: rgba(0, 0, 0, 0.3);
+    --shadow-color: rgba(0,0,0,0.22);
     --shadow-light: rgba(0, 0, 0, 0.2);
     --toolbar-bg: #2d2d2d; /* Dark toolbar */
     --toolbar-shadow: rgba(0, 0, 0, 0.2);
-    --countdown-digit-color: #4a90e2; /* Keep primary color for digits */
+    --countdown-digit-color: #60a5fa; /* Keep primary color for digits */
     --countdown-label-color: #b0b0b0; /* Light gray for labels */
-    --countdown-message-color: #f5a623; /* Keep accent color for messages */
+    --countdown-message-color: #fbbf24; /* Keep accent color for messages */
     
     /* Additional dark mode variables for better consistency */
     --filter-inactive-bg: #404040;
@@ -81,6 +81,34 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 0;
+    background-image: url('https://images.unsplash.com/photo-1620121692029-d088224ddc74?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWFjJTIwb3MlMjB3YWxscGFwZXJ8ZW58MHx8MHx8fDA%3D');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.dark-mode {
+    background-image: url('https://i.pinimg.com/736x/b8/e0/a4/b8e0a4f8df921bcbfda9ecc9353c99d7.jpg');
+}
+
+/* Glassmorphism for main containers - update for stronger blur and translucency in light mode */
+.screen-container, .navigation-bar, .info-details, .question-block, #result-container, #score-container, .utility-card, .subject-card, .quiz-list-item, .info-card, .method-selection-card, .plan-header, .stat-card, .timeline-content, .current-session-info, .schedule-modal-content, .ttt-modal {
+    background: var(--card-background) !important;
+    color: var(--text-color) !important;
+    box-shadow: 0 8px 32px 0 var(--shadow-color);
+    border: 1.5px solid var(--border-color);
+    backdrop-filter: blur(18px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+    border-radius: 16px;
+}
+body.dark-mode .screen-container, body.dark-mode .navigation-bar, body.dark-mode .info-details, body.dark-mode .question-block, body.dark-mode #result-container, body.dark-mode #score-container, body.dark-mode .utility-card, body.dark-mode .subject-card, body.dark-mode .quiz-list-item, body.dark-mode .info-card, body.dark-mode .method-selection-card, body.dark-mode .plan-header, body.dark-mode .stat-card, body.dark-mode .timeline-content, body.dark-mode .current-session-info, body.dark-mode .schedule-modal-content, body.dark-mode .ttt-modal {
+    background: rgba(34, 34, 40, 0.55);
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-radius: 16px;
+    border: 1px solid rgba(60, 60, 70, 0.28);
 }
 
 /* --- Navigation Bar Styles --- */
@@ -136,9 +164,9 @@ body {
 }
 
 .nav-item.active {
-    color: #ffffff;
+    color: #ffffff !important;
     font-weight: 600;
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    background: linear-gradient(135deg, var(--primary-color), #1d4ed8);
     border-color: #3b82f6;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     transform: translateY(-1px);
@@ -265,7 +293,7 @@ body {
 
 /* --- Dark Mode Specific Styles --- */
 .dark-mode .subject-card {
-    background-color: var(--card-background);
+    background: var(--card-background);
     border-color: var(--border-color);
     color: var(--text-color);
 }
@@ -369,20 +397,20 @@ body {
 }
 
 .dark-mode .filter-btn {
-    background-color: var(--filter-inactive-bg);
-    color: var(--filter-inactive-text);
-    border-color: var(--filter-inactive-border);
+    background: rgba(255,255,255,0.18);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
 }
 
 .dark-mode .filter-btn:hover {
-    background-color: #555;
+    background: #555;
     border-color: #666;
 }
 
 .dark-mode .filter-btn.active {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
+    background: var(--primary-color) !important;
+    color: white !important;
+    border: none;
 }
 
 .dark-mode #quiz-toolbar {
@@ -1032,9 +1060,9 @@ body {
 #score-container { display: none; margin-top: 35px; font-size: 1.3em; font-weight: 600; color: var(--text-color); padding: 15px 20px; background-color: var(--hover-light-bg); border: 1px solid var(--primary-color); border-radius: 8px; text-align: left; }
 #score-container strong { color: var(--primary-color); font-weight: 700; }
 #filter-container { display: none; margin-top: 20px; margin-bottom: 15px; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
-.filter-btn { background-color: var(--filter-inactive-bg); color: var(--filter-inactive-text); border: 1px solid var(--filter-inactive-border); padding: 8px 16px; font-size: 0.9em; font-weight: 600; border-radius: 20px; cursor: pointer; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; margin: 0 5px; }
-.filter-btn:hover { background-color: #d3d9df; border-color: #adb5bd; }
-.filter-btn.active { background-color: var(--filter-active-bg); color: var(--filter-active-text); border-color: var(--primary-color); font-weight: 700; }
+.filter-btn { background: rgba(255,255,255,0.18); color: var(--primary-color); border: 1px solid var(--primary-color); padding: 8px 16px; font-size: 0.9em; font-weight: 600; border-radius: 20px; cursor: pointer; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; margin: 0 5px; }
+.filter-btn:hover { background: #d3d9df; border-color: #adb5bd; }
+.filter-btn.active { background: var(--primary-color) !important; color: white !important; border: none; }
 #result-container { display: none; margin-top: 0; text-align: left; padding: 20px; background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 10px; }
 #result-container > div, #result-container > p { margin-bottom: 15px; padding: 15px; border-bottom: none; border: 1px solid var(--border-color); border-radius: 6px; background-color: #fafafe; text-align: left; transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease; overflow: hidden; }
 #result-container > div.hidden-result, #result-container > p.hidden-result { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; border-width: 0; overflow: hidden; }
@@ -3642,3 +3670,222 @@ body.dark-mode .schedule-modal-header { background: #232323; }
     display: none !important;
   }
 }
+
+/* Tic Tac Toe Modal Styles */
+.ttt-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.25); z-index: 9999;
+}
+.ttt-modal {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  background: #fff; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 10000; min-width: 320px; max-width: 95vw; width: 370px;
+  padding: 0 0 18px 0; display: flex; flex-direction: column; align-items: center;
+}
+.ttt-modal-header {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 22px 8px 22px; border-radius: 18px 18px 0 0; background: #f5f7fa;
+}
+.ttt-modal-title { font-size: 1.18em; font-weight: 700; color: #1976d2; }
+.ttt-modal-close {
+  background: none; border: none; font-size: 1.7em; color: #888; cursor: pointer;
+  border-radius: 50%; width: 36px; height: 36px; transition: background 0.18s;
+}
+.ttt-modal-close:hover { background: #e3e3e3; }
+.ttt-modal-desc { font-size: 0.98em; color: #555; margin: 0 22px 10px 22px; text-align: center; }
+.ttt-board-container { margin: 0 auto 12px auto; }
+.ttt-controls { display: flex; justify-content: center; gap: 12px; }
+.ttt-restart-btn {
+  background: linear-gradient(135deg,#1976d2 0%,#64b5f6 100%); color: #fff;
+  border: none; border-radius: 12px; padding: 8px 22px; font-weight: 600; font-size: 1em;
+  cursor: pointer; box-shadow: 0 2px 8px rgba(25,118,210,0.08);
+  transition: background 0.18s;
+}
+.ttt-restart-btn:hover { background: #1565c0; }
+@media (max-width: 600px) {
+  .ttt-modal { min-width: 0; width: 98vw; max-width: 100vw; padding: 0 0 10px 0; }
+  .ttt-modal-header { padding: 12px 10px 6px 14px; }
+  .ttt-modal-title { font-size: 1.05em; }
+  .ttt-modal-desc { font-size: 0.95em; margin: 0 8px 8px 8px; }
+  .ttt-restart-btn { font-size: 0.97em; padding: 7px 12vw; }
+}
+body.dark-mode .ttt-modal { background: #23272f; color: #e3e3e3; }
+body.dark-mode .ttt-modal-header { background: #232323; }
+body.dark-mode .ttt-modal-title { color: #90caf9; }
+body.dark-mode .ttt-modal-close { color: #aaa; }
+body.dark-mode .ttt-modal-close:hover { background: #333; }
+body.dark-mode .ttt-restart-btn { background: linear-gradient(135deg,#1565c0 0%,#1976d2 100%); }
+
+/* Tic Tac Toe Board Styles */
+.ttt-board { display: flex; flex-direction: column; gap: 0; margin: 0 auto; }
+.ttt-board-row { display: flex; }
+.ttt-cell {
+  width: 64px; height: 64px; border: 2px solid #b0bec5; font-size: 2.1em; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; background: #f8fafc; transition: background 0.15s, border 0.15s;
+}
+.ttt-cell:not(:last-child) { border-right: none; }
+.ttt-board-row:not(:last-child) .ttt-cell { border-bottom: none; }
+.ttt-cell:hover { background: #e3f2fd; }
+.ttt-cell-selected { background: #fffde7 !important; border: 2.5px solid #ffb300 !important; }
+.ttt-status { margin: 12px 0 0 0; font-size: 1.08em; text-align: center; min-height: 1.8em; }
+@media (max-width: 600px) {
+  .ttt-cell { width: 18vw; height: 18vw; min-width: 38px; min-height: 38px; font-size: 1.3em; }
+  .ttt-board { max-width: 98vw; }
+}
+body.dark-mode .ttt-board { background: #23272f; }
+body.dark-mode .ttt-cell { background: #23272f; color: #fff; border-color: #607d8b; }
+body.dark-mode .ttt-cell:hover { background: #263238; }
+body.dark-mode .ttt-cell-selected { background: #33330a !important; border-color: #ffd600 !important; }
+
+/* Tic Tac Toe Mode Select */
+.ttt-mode-row { display: flex; justify-content: center; gap: 10px; margin: 8px 0 10px 0; }
+.ttt-mode-btn {
+  background: #e3eafc; color: #1976d2; border: none; border-radius: 10px; padding: 7px 18px; font-weight: 600; font-size: 1em;
+  cursor: pointer; transition: background 0.18s, color 0.18s;
+}
+.ttt-mode-btn.active, .ttt-mode-btn:active {
+  background: linear-gradient(135deg,#1976d2 0%,#64b5f6 100%); color: #fff;
+}
+@media (max-width: 600px) {
+  .ttt-mode-btn { font-size: 0.97em; padding: 7px 8vw; }
+  .ttt-mode-row { gap: 4vw; }
+}
+body.dark-mode .ttt-mode-btn { background: #23272f; color: #90caf9; }
+body.dark-mode .ttt-mode-btn.active, body.dark-mode .ttt-mode-btn:active { background: linear-gradient(135deg,#1565c0 0%,#1976d2 100%); color: #fff; }
+
+/* Tối ưu UI Tic Tac Toe modal */
+.ttt-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 400px;
+  min-width: 0;
+  width: 95vw;
+}
+.ttt-mode-row {
+  margin: 16px 0 10px 0;
+  width: 100%;
+  justify-content: center;
+}
+.ttt-board-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto 10px auto;
+}
+.ttt-board {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.ttt-status {
+  margin: 18px 0 0 0;
+  text-align: center;
+  width: 100%;
+}
+.ttt-controls {
+  margin-top: 18px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+@media (max-width: 600px) {
+  .ttt-modal { max-width: 99vw; width: 99vw; }
+  .ttt-board { max-width: 98vw; }
+  .ttt-board-container { width: 100%; }
+}
+
+/* Hiệu ứng glow đỏ nháy cho quân cũ nhất */
+@keyframes ttt-glow {
+  0% { box-shadow: 0 0 0 0 #ff1744; }
+  50% { box-shadow: 0 0 16px 6px #ff1744, 0 0 0 0 #ff1744; }
+  100% { box-shadow: 0 0 0 0 #ff1744; }
+}
+.ttt-cell-glow {
+  animation: ttt-glow 1s infinite;
+  border-color: #ff1744 !important;
+  z-index: 2;
+}
+/* Nâng cấp UI bàn cờ */
+.ttt-board { background: #f3f6fa; border-radius: 18px; box-shadow: 0 2px 12px rgba(25,118,210,0.07); padding: 12px; }
+.ttt-cell {
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  color: #1976d2;
+  background: #f8fafc;
+  border-radius: 8px;
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s;
+}
+.ttt-cell:hover {
+  background: #e3f2fd;
+  box-shadow: 0 0 8px #90caf9;
+}
+.ttt-cell-selected {
+  background: #fffde7 !important;
+  border: 2.5px solid #ffb300 !important;
+}
+/* Thông báo thắng nổi bật */
+.ttt-win-banner {
+  margin: 18px auto 0 auto;
+  background: linear-gradient(90deg,#43e97b 0%,#38f9d7 100%);
+  color: #222;
+  font-size: 1.18em;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 12px 24px;
+  box-shadow: 0 2px 12px rgba(67,233,123,0.13);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  animation: ttt-win-pop 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+}
+@keyframes ttt-win-pop {
+  0% { transform: scale(0.7); opacity: 0; }
+  70% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.ttt-win-icon { font-size: 1.5em; margin-right: 6px; }
+@media (max-width: 600px) {
+  .ttt-board { padding: 4vw; }
+  .ttt-win-banner { font-size: 1em; padding: 10px 4vw; }
+}
+body.dark-mode .ttt-board { background: #23272f; }
+body.dark-mode .ttt-cell { background: #23272f; color: #90caf9; border-color: #607d8b; }
+body.dark-mode .ttt-cell:hover { background: #263238; }
+body.dark-mode .ttt-cell-glow { box-shadow: 0 0 16px 6px #ff1744 !important; }
+body.dark-mode .ttt-win-banner { background: linear-gradient(90deg,#43e97b 0%,#38f9d7 100%); color: #232323; }
+
+/* Đổi màu quân cờ: X đỏ, O xanh dương */
+.ttt-cell { color: #1976d2; }
+.ttt-cell:empty { color: inherit; }
+.ttt-cell::after { display: none; }
+.ttt-cell { position: relative; }
+.ttt-cell:before { display: none; }
+.ttt-cell { font-weight: 700; }
+.ttt-cell { user-select: none; }
+.ttt-cell { font-size: 2.1em; }
+.ttt-cell { transition: color 0.18s; }
+.ttt-cell { text-align: center; }
+.ttt-cell { vertical-align: middle; }
+.ttt-cell { line-height: 1; }
+.ttt-cell { letter-spacing: 0.02em; }
+.ttt-cell { word-break: keep-all; }
+.ttt-cell { white-space: nowrap; }
+.ttt-cell { overflow: hidden; }
+.ttt-cell { text-shadow: none; }
+.ttt-cell { background-clip: padding-box; }
+.ttt-cell { -webkit-background-clip: padding-box; }
+.ttt-cell { -webkit-text-fill-color: initial; }
+.ttt-cell { -webkit-text-stroke: 0; }
+.ttt-cell { -webkit-font-smoothing: antialiased; }
+.ttt-cell { -moz-osx-font-smoothing: grayscale; }
+.ttt-cell { }
+.ttt-cell:contains('X') { color: #ff1744 !important; }
+.ttt-cell:contains('O') { color: #1976d2 !important; }
+/* Fallback cho trình duyệt không hỗ trợ :contains */
+.ttt-cell.x-cell { color: #ff1744 !important; }
+.ttt-cell.o-cell { color: #1976d2 !important; }
