@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Tycoon</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+        <!-- UI Panel: Money, MPS & Dragon Tokens -->
+        <div class="ui-panel">
+            <div class="stat-box money">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="8.5"></circle>
+                    <path d="M9 12h6M12 8v8" stroke-linecap="round"></path>
+                </svg>
+                <span id="money-display" class="font-bold text-lg leading-none"></span>
+            </div>
+            <div class="stat-box mps">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M13 2L3 14h7l-1 8 12-14h-8l0-6z" stroke-linejoin="round" stroke-linecap="round"></path>
+                </svg>
+                <span id="mps-display">0</span>/giây
+            </div>
+            <div class="stat-box dragon-tokens">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2l6.5 3.8v7.4L12 17 5.5 13.2V5.8L12 2z" stroke-linejoin="round"></path>
+                    <circle cx="12" cy="9.5" r="2"></circle>
+                </svg>
+                <span id="main-dragon-tokens-display" class="font-bold text-lg leading-none">0</span>
+            </div>
+        </div>
+
+        <!-- Character Track -->
+        <div id="character-track-container">
+            <!-- Characters will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Game Dock -->
+    <div id="game-dock">
+        <button id="manage-button" class="dock-button">
+            <span class="dock-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="24" height="24"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-16,96a16,16,0,1,1-16-16A16,16,0,0,1,112,120Zm64,0a16,16,0,1,1-16-16A16,16,0,0,1,176,120ZM128,200a40,40,0,0,1-32.9-16,8,8,0,0,1,12.7-9.5c.8-1,16.5-16.7,48.4-16.5,30.3.2,46.1,15.6,47.1,16.6a8,8,0,0,1,10.6,11.5A55.8,55.8,0,0,1,128,200Z"></path></svg>
+            </span>
+            <span class="dock-label">Quản lí</span>
+        </button>
+        <button id="dungeon-button" class="dock-button">
+            <span class="dock-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="24" height="24"><path d="M228.33,184.22a8,8,0,0,0-5.83-11.41L196,168l-.1-17.15c0-11.23-14.71-18.7-25-18.84-1.28,0-2.55-.06-3.8-.18l-1.3-8a8,8,0,0,0-15.54,2.59l-.35,2.15C136.21,114.39,128,112,128,112S96,80,64,80c-30.7,0-55.57,21.36-56.12,21.84a8,8,0,0,0-1,11.2,8,8,0,0,0,11.2,1A40,40,0,0,1,56,112c32,0,48,32,48,32h24l13.6-13.6a8,8,0,0,0-11.31-11.31L120,128v8a8,8,0,0,0,16,0v-8a8,8,0,0,0-2.34-5.66c-.34-.34-29.32-29.32-45.75-26.66a8,8,0,0,0-4.66,15.71l2.58.74c1.1.31,2.2.66,3.31,1a8,8,0,0,0,4.72-1.22c15-8,24-10.42,24-10.42a8,8,0,0,0-6.17-14.7c-17.41,2.94-34.58,10.23-44.47,15.42L57.17,112A8,8,0,0,0,56,120c-.13,4.64,1.86,8.74,5.49,11.29a8,8,0,0,0,10.51-1.34c.7-.71,2.83-2.67,6.86-5.73a40.09,40.09,0,0,1,32.93,16c.3.56,2,3.34,5.51,7.21a8,8,0,0,0,14.65-4.4c-2.19-7.2-6.52-16.32-13.43-21.61a8,8,0,0,0-10.87,1.88,8,8,0,0,0,1.87,10.87,40.09,40.09,0,0,1-16.32,13.43,8,8,0,0,0-4.4,14.65c.6,1.48,1.4,2.9,2.27,4.24a8,8,0,0,0,11,1.94c.71-.46,1.52-.92,2.37-1.37a8,8,0,0,0-10.43,12.55c.78,1.29,1.6,2.5,2.44,3.65a8,8,0,0,0,13.13-7.55c-1.33-2.31-2.73-4.52-4.18-6.6a8,8,0,0,0-12,12.53c.66,1.25,1.35,2.45,2.06,3.58a8,8,0,0,0,10.8,1.94c.73-.46,1.54-.92,2.39-1.37A8,8,0,0,0,120,184.22a8,8,0,0,0,5.83,11.41l26.5,4.73c1.7.3,3.35-.11,4.9-.76l5.77-2.43a8,8,0,0,0,5.18-10c-3.1-7.25-6.65-14.39-10.43-21.36a8,8,0,0,0-11-1.87c-.82.52-1.7,1-2.6,1.43a8,8,0,0,0-10.86,2.15,8,8,0,0,0,2.14,10.87,40.09,40.09,0,0,1,16.32,13.43c.89,1.75,1.72,3.48,2.54,5.19a8,8,0,0,0,15.11-5.11c-.51-1.63-1.1-3.26-1.71-4.88a8,8,0,0,0-12.21-6.19c-.83.47-1.72.93-2.65,1.38a8,8,0,0,0-11,2.06A8,8,0,0,0,128,216.22a8,8,0,0,0,11.41-5.83L144,196l17.15.1c11.23,0,18.7,14.71,18.84,25,.12,1.25.18,2.52.18,3.8a8,8,0,0,0,15.54-2.59l.35-2.15C197.79,218.39,208,216,208,216l32-32c0,0-32-48-32-80A8,8,0,0,0,208,88c-.13-4.64-2-8.74-5.59-11.29a8,8,0,0,0-10.41,1.34c-.71.7-2.67,2.83-5.73,6.86a40.09,40.09,0,0,1-16,32.93c-1,1.83-2.22,3.58-3.48,5.29a8,8,0,0,0-13.78,7.9c1.64,2.94,3.29,5.77,4.89,8.44l2.16,3.61a8,8,0,0,0,11.41,5.83c1.75-.89,3.48-1.72,5.19-2.54a8,8,0,0,0,10.22,6.58,8,8,0,0,0,6.58-10.22Z" fill="currentColor"/></svg>
+            </span>
+            <span class="dock-label">Hầm ngục</span>
+        </button>
+        <button id="gacha-button" class="dock-button">
+            <span class="dock-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="24" height="24"><path d="M228.33,128a100.1,100.1,0,0,1-18.42,54.78,8,8,0,0,1-13.78-8l.38-.66A84,84,0,1,0,128,212a83.67,83.67,0,0,0,45.41-13.34l.65.37a8,8,0,0,1,11.36-1.57A100.1,100.1,0,0,1,228.33,128ZM128,72a8,8,0,0,1,8-8h24a8,8,0,0,1,0,16H136a8,8,0,0,1-8-8Zm-40,88a8,8,0,0,1,8-8H160a8,8,0,0,1,0,16H96A8,8,0,0,1,88,160ZM112,120a16,16,0,1,1,16-16A16,16,0,0,1,112,120Z"></path></svg>
+            </span>
+            <span class="dock-label">Gacha</span>
+        </button>
+        <button id="artifacts-button" class="dock-button">
+            <span class="dock-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="24" height="24"><path d="M228.33,136.56l-32-56A8,8,0,0,0,184,76H120a8,8,0,0,0-6.91,12L144,144l-30.91,56a8,8,0,0,0,6.91,12h64a8,8,0,0,0,6.91-12ZM144,152.12l-19.12-32L144,87.88l19.12,32ZM120,68a8,8,0,0,1-6.91-12L152,8a8,8,0,0,1,13.86,8l-30.91,56A8,8,0,0,1,128,76H80a8,8,0,0,1-6.91-12L104,28a8,8,0,0,1,13.86-8l30.91,56a8,8,0,0,1-6.91,12H128a8,8,0,0,1-6.91,12L104,108a8,8,0,0,1-6.91-12Z" fill="currentColor"/></svg>
+            </span>
+            <span class="dock-label">Di vật</span>
+        </button>
+        <button id="upgrades-button" class="dock-button">
+            <span class="dock-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="24" height="24"><path d="M229.66,109.66l-48,48a8,8,0,0,1-11.32-11.32L204.69,112H128a88.1,88.1,0,0,0-88,88,8,8,0,0,1-16,0A104.11,104.11,0,0,1,128,96h76.69L170.34,61.66a8,8,0,0,1,11.32-11.32l48,48A8,8,0,0,1,229.66,109.66Z"/></svg>
+            </span>
+            <span class="dock-label">Nâng cấp</span>
+        </button>
+        <button id="settings-button" class="dock-button">
+            <span class="dock-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="24" height="24"><path d="M213.66,100.86,183.1,89.1a40.1,40.1,0,0,0-15.7-27.57l10.43-32a8,8,0,0,0-13.86-8.94l-31.55,10.4a40.09,40.09,0,0,0-27.28-15.69L115.14,21.66a8,8,0,0,0-13.86,0L89.1,52.1a40.1,40.1,0,0,0-27.57,15.7L29.53,57.39a8,8,0,0,0-8.94,13.86l10.4,31.55a40.09,40.09,0,0,0-15.69,27.28L21.66,140.86a8,8,0,0,0,0,13.86l30.44,10.76a40.1,40.1,0,0,0,15.7,27.57L57.39,226.47a8,8,0,0,0,13.86,8.94l31.55-10.4a40.09,40.09,0,0,0,27.28,15.69l10.76,30.44a8,8,0,0,0,13.86,0l10.4-30.44a40.1,40.1,0,0,0,27.57-15.7l32,10.43a8,8,0,0,0,8.94-13.86L198.61,166.9a40.09,40.09,0,0,0,15.69-27.28L234.34,115.14a8,8,0,0,0,0-13.86ZM128,168a40,40,0,1,1,40-40A40,40,0,0,1,128,168Z"></path></svg>
+            </span>
+            <span class="dock-label">Cài đặt</span>
+        </button>
+    </div>
+
+    <!-- The Modal -->
+    <div id="manage-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button">&times;</button>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Các nhân vật của bạn</h2>
+                <span id="equipped-count" class="font-semibold text-lg"></span>
+            </div>
+            <div class="modal-menu-buttons">
+                <button id="sort-button" class="sort-button">Sắp xếp: Tiền/s</button>
+                <button class="auto-equip">Trang bị nhanh</button>
+                <button class="sell-unequipped">Bán nhanh</button>
+                <button class="quick-fuse">Hợp nhất nhanh</button>
+            </div>
+            <div id="purchased-characters-grid" class="purchased-characters-grid">
+                <!-- Purchased character cards will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="settings-modal-content">
+            <button class="modal-close-button">&times;</button>
+            <h2 class="text-xl font-bold mb-4">Cài đặt</h2>
+            <div class="setting-item">
+                <span>Chế độ Tối (Dark Mode)</span>
+                <label class="switch">
+                    <input type="checkbox" id="dark-mode-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-item music-player-section">
+                <h3 class="text-lg font-semibold mb-3">Trình phát nhạc</h3>
+
+                <!-- Current Track Display -->
+                <div class="current-track-info mb-3" style="display:flex;align-items:center;gap:1rem;">
+                    <img id="current-track-icon" src="music/icon/track-1.png" alt="Track Icon" style="width:48px;height:48px;border-radius:8px;object-fit:cover;">
+                    <div>
+                        <div id="current-track-title" class="font-medium">Track 1</div>
+                        <div id="current-track-status" class="text-sm text-gray-500 dark:text-gray-400">Đang phát</div>
+                    </div>
+                </div>
+
+                <!-- Music Controls -->
+                <div class="music-controls mb-3" style="display:flex;align-items:center;justify-content:center;gap:1rem;">
+                    <button id="prev-track" class="music-control-btn" title="Bài trước">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                        </svg>
+                    </button>
+                    <button id="play-pause" class="music-control-btn play-pause-btn" title="Phát/Tạm dừng">
+                        <svg id="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <svg id="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                        </svg>
+                    </button>
+                    <button id="next-track" class="music-control-btn" title="Bài tiếp theo">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Volume Control -->
+                <div class="volume-control">
+                    <label for="music-volume" class="block text-sm font-medium mb-2">Âm lượng</label>
+                    <div style="display:flex;align-items:center;gap:.75rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-gray-500">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                        </svg>
+                        <input type="range" id="music-volume" min="0" max="100" step="1" value="70" style="flex:1;min-width:120px;">
+                        <span id="music-volume-value" class="text-sm" style="min-width:35px;">70%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setting-item mt-4">
+                <button id="save-game-button" class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition-colors">Lưu Game</button>
+            </div>
+            <div class="setting-item">
+                <button id="load-game-button" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors">Tải Game</button>
+            </div>
+            <div class="setting-item">
+                <button id="reset-game-button" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition-colors" hidden>Reset Game</button>
+            </div>
+            <div class="setting-item mt-4">
+                <label for="code-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nhập mã code:</label>
+                <input type="text" id="code-input" placeholder="Nhập code của bạn" class="w-full p-2 border border-gray-300 rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <button id="redeem-code-button" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition-colors mt-2">Nhập Code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dungeon Modal -->
+    <div id="dungeon-modal" class="modal-overlay">
+        <div class="dungeon-modal-content">
+            <button class="modal-close-button">&times;</button>
+            <h2 class="text-2xl font-bold text-center mb-4">Hầm ngục</h2>
+            <div id="dungeon-stats" class="flex justify-around items-center mb-6 text-center">
+                <div class="stat-item flex flex-col items-center">
+                    <span class="text-xl font-bold text-blue-500" id="current-floor">Tầng 1</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Tầng hiện tại</span>
+                </div>
+                <div class="stat-item flex flex-col items-center">
+                    <span class="text-xl font-bold text-yellow-500" id="dragon-tokens-display">0</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Dragon Token</span>
+                </div>
+                <div class="stat-item flex flex-col items-center">
+                    <span class="text-xl font-bold text-purple-500" id="potions-display">0</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Bình máu</span>
+                </div>
+            </div>
+
+            <div id="dungeon-boss-info" class="bg-gray-200 dark:bg-gray-700 p-4 rounded-xl text-center shadow-lg transition-colors">
+                <div class="relative">
+                    <img id="boss-image" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiBmaWxsPSIjMDAwMDAwIi8+Cjx0ZXh0IHg9Ijc1IiB5PSI4MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjIwIiBmaWxsPSIjRkZGRkZGIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CT1NTPC90ZXh0Pgo8L3N2Zz4=" alt="Boss Image" class="w-40 h-40 object-cover rounded-lg mx-auto mb-2">
+                    <span id="dungeon-timer" class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold shadow-md">10s</span>
+                </div>
+                <p id="boss-name" class="text-xl font-semibold mb-2">BOSS</p>
+                <div class="bg-gray-300 dark:bg-gray-600 rounded-full h-4 relative overflow-hidden">
+                    <div id="boss-hp-bar" class="bg-red-500 h-full transition-all duration-300 ease-out" style="width: 100%;"></div>
+                    <span id="boss-hp-text" class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white z-10"></span>
+                </div>
+            </div>
+
+            <div id="dungeon-buttons" class="mt-6 flex flex-col gap-2">
+                <button id="start-dungeon-button" class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full transition-colors shadow-lg">Bắt đầu Leo Hầm ngục</button>
+                <button id="dungeon-end-button" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-full transition-colors shadow-lg" style="display: none;">Thoát khỏi Hầm ngục</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gacha Modal -->
+    <div id="gacha-modal" class="modal-overlay">
+        <div class="gacha-modal-content">
+            <button class="modal-close-button">&times;</button>
+            <h2 class="text-xl font-bold mb-4">Gacha Di Vật</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Sử dụng Dragon Token để quay di vật. Giá: 50 🐉/lần</p>
+            <div id="gacha-animation" class="w-full flex justify-center items-center h-48 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-inner mb-4 animate-pulse" style="display: none;">
+                <p class="text-2xl font-bold text-gray-500">Đang quay...</p>
+            </div>
+            <div id="gacha-result-container" class="w-full p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-inner text-center">
+                <div id="gacha-result">
+                    <!-- Result will be displayed here -->
+                </div>
+            </div>
+            <button id="roll-artifact-button" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-full transition-colors mt-4">Quay</button>
+        </div>
+    </div>
+
+    <!-- Artifacts Management Modal -->
+    <div id="artifact-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button">&times;</button>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Các Di vật của bạn</h2>
+                <span id="equipped-artifacts-count" class="font-semibold text-lg"></span>
+            </div>
+
+            <!-- Artifact Control Buttons -->
+            <div class="artifact-controls mb-4 flex flex-wrap gap-2">
+                <button id="artifact-sort-button" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                    Sắp xếp: Độ hiếm
+                </button>
+                <button id="artifact-unequip-all" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
+                    Tháo tất cả
+                </button>
+                <button id="artifact-sell-unlocked" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                    Bán không khóa
+                </button>
+            </div>
+
+            <div id="owned-artifacts-grid" class="purchased-characters-grid">
+                <!-- Owned artifacts will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Upgrades Modal -->
+    <div id="upgrades-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button">&times;</button>
+            <h2 class="text-2xl font-bold text-center mb-6">Nâng cấp</h2>
+
+            <div class="upgrades-grid">
+                <!-- Character Equipment Slots -->
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <h3 class="upgrade-title">Slot Trang Bị Nhân Vật</h3>
+                        <span class="upgrade-level" id="character-slots-level">Cấp 0/5</span>
+                    </div>
+                    <div class="upgrade-description">
+                        Tăng số lượng nhân vật có thể trang bị cùng lúc
+                    </div>
+                    <div class="upgrade-stats">
+                        <span class="current-value">Hiện tại: <span id="current-character-slots">10</span> slot</span>
+                        <span class="next-value">Tiếp theo: <span id="next-character-slots">11</span> slot</span>
+                    </div>
+                    <button id="buy-character-slots" class="upgrade-button">
+                        Mua - <span id="character-slots-price">5,000</span> 💰
+                    </button>
+                </div>
+
+                <!-- Artifact Equipment Slots -->
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <h3 class="upgrade-title">Slot Trang Bị Di Vật</h3>
+                        <span class="upgrade-level" id="artifact-slots-level">Cấp 0/3</span>
+                    </div>
+                    <div class="upgrade-description">
+                        Tăng số lượng di vật có thể trang bị cùng lúc
+                    </div>
+                    <div class="upgrade-stats">
+                        <span class="current-value">Hiện tại: <span id="current-artifact-slots">3</span> slot</span>
+                        <span class="next-value">Tiếp theo: <span id="next-artifact-slots">4</span> slot</span>
+                    </div>
+                    <button id="buy-artifact-slots" class="upgrade-button">
+                        Mua - <span id="artifact-slots-price">100,000</span> 💰
+                    </button>
+                </div>
+
+                <!-- Character Storage Slots -->
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <h3 class="upgrade-title">Slot Kho Nhân Vật</h3>
+                        <span class="upgrade-level" id="character-storage-level">Cấp 0/5</span>
+                    </div>
+                    <div class="upgrade-description">
+                        Tăng số lượng nhân vật có thể lưu trữ trong kho
+                    </div>
+                    <div class="upgrade-stats">
+                        <span class="current-value">Hiện tại: <span id="current-character-storage">30</span> slot</span>
+                        <span class="next-value">Tiếp theo: <span id="next-character-storage">35</span> slot</span>
+                    </div>
+                    <button id="buy-character-storage" class="upgrade-button">
+                        Mua - <span id="character-storage-price">10,000</span> 💰
+                    </button>
+                </div>
+
+                <!-- Artifact Storage Slots -->
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <h3 class="upgrade-title">Slot Kho Di Vật</h3>
+                        <span class="upgrade-level" id="artifact-storage-level">Cấp 0/5</span>
+                    </div>
+                    <div class="upgrade-description">
+                        Tăng số lượng di vật có thể lưu trữ trong kho
+                    </div>
+                    <div class="upgrade-stats">
+                        <span class="current-value">Hiện tại: <span id="current-artifact-storage">15</span> slot</span>
+                        <span class="next-value">Tiếp theo: <span id="next-artifact-storage">20</span> slot</span>
+                    </div>
+                    <button id="buy-artifact-storage" class="upgrade-button">
+                        Mua - <span id="artifact-storage-price">10,000</span> 💰
+                    </button>
+                </div>
+
+                <!-- Track Speed -->
+                <div class="upgrade-item">
+                    <div class="upgrade-header">
+                        <h3 class="upgrade-title">Tốc Độ Đường Chạy</h3>
+                        <span class="upgrade-level" id="track-speed-level">Cấp 0/5</span>
+                    </div>
+                    <div class="upgrade-description">
+                        Tăng tốc độ di chuyển của nhân vật trên đường chạy
+                    </div>
+                    <div class="upgrade-stats">
+                        <span class="current-value">Hiện tại: <span id="current-track-speed">100</span>%</span>
+                        <span class="next-value">Tiếp theo: <span id="next-track-speed">110</span>%</span>
+                    </div>
+                    <button id="buy-track-speed" class="upgrade-button">
+                        Mua - <span id="track-speed-price">100</span> 💰
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Message Box -->
+    <div id="message-box"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
